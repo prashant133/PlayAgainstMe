@@ -1,0 +1,23 @@
+{
+  "name": "futsal_booking",
+  "version": "1.0.0",
+  "description": "This is a futsal booking app where people can communicate with each other to arrange the match between them.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "futsal"
+  ],
+  "author": "Prashant Deshar",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.19.3",
+    "nodemon": "^3.1.11",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}
