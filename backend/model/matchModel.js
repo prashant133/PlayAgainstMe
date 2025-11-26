@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const matchSchema = new mongoose.Schema(
   {
     creator: {
@@ -28,6 +29,7 @@ const matchSchema = new mongoose.Schema(
     playerJoined: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      default: null,
     },
   },
   { timestamps: true }

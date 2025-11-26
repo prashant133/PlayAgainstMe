@@ -1,8 +1,13 @@
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
+const morgan = require("morgan");
 
 const app = express();
+
+// middleware
+app.use(morgan("dev"));
+app.use(express.json());
 
 // setup session (middleware)
 app.use(
@@ -23,6 +28,14 @@ app.get("/", (req, res) => {
 
 // import routes
 const authRouter = require("./routes/authRoute");
+const matchRouter = require("./routes/matchRoute");
+
 app.use("/auth", authRouter);
+app.use("/api/v1/match", matchRouter);
+
+const { notFound, errorMiddleware } = require("./middleware/errorMiddleware");
+// error middleware
+app.use(errorMiddleware);
+app.use(notFound);
 
 module.exports = app;
