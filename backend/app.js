@@ -2,12 +2,23 @@ const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const morgan = require("morgan");
+const cors = require("cors")
 
 const app = express();
 
 // middleware
 app.use(morgan("dev"));
 app.use(express.json());
+
+// cors
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials : true
+  })
+);
+
 
 // setup session (middleware)
 app.use(
