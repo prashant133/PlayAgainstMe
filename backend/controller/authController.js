@@ -2,7 +2,7 @@ const ApiResponse = require("../utils/ApiResponse");
 const ApiError = require("../utils/ApiError");
 
 const googleCallback = (req, res) => {
-  res.redirect("/auth/profile");
+  res.redirect(`${process.env.CLIENT_URL}/`);
 };
 
 const getProfile = (req, res, next) => {
