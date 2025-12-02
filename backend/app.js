@@ -18,6 +18,7 @@ app.use(
     credentials : true
   })
 );
+console.log("cors  allowed ", process.env.CLIENT_URL);
 
 
 // setup session (middleware)
@@ -33,9 +34,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", (req, res) => {
-  res.send('<a href="/auth/google">Login with Google</a>');
-});
+// app.get("/", (req, res) => {
+//   res.send('<a href="/auth/google">Login with Google</a>');
+// });
 
 // import routes
 const authRouter = require("./routes/authRoute");

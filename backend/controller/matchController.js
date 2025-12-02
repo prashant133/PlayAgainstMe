@@ -5,8 +5,11 @@ const Match = require("../model/matchModel");
 
 // create a match
 const createMatchController = asyncHandler(async (req, res) => {
-  const { creator, location, pay, date, time, playerJoined } = req.body;
-
+  const { location, pay, date, time, playerJoined } = req.body;
+  const creator = req.user?._id;
+  if (!creator) {
+    throw new ApiError(401, "User not logged in");
+  }
   const match = await Match.create({
     creator,
     location,
@@ -90,7 +93,7 @@ const updateMatchController = asyncHandler(async (req, res) => {
 // join a match
 const joinMatchController = asyncHandler(async (req, res) => {
   const { matchId } = req.params;
-  const playerId = req.body.playerId;
+  const playerId = req.user._id;
 
   const match = await Match.findById(matchId);
 
@@ -99,7 +102,7 @@ const joinMatchController = asyncHandler(async (req, res) => {
   }
 
   //   prevent creator to join the match
-  if (match.creator.toString() === playerId) {
+  if (match.creator.toString() === playerId.toString()) {
     throw new ApiError(400, "Creator can not join the match");
   }
 
@@ -129,6 +132,43 @@ const getAvailableMatchesController = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, matches, "Available matches fetched"));
 });
 
+const getUserMatchesController = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "User not logged in");
+  }
+
+  // Matches the user created
+  const createdMatchesPromise = Match.find({ creator: userId })
+    .populate("creator", "name email profilePic")
+    .populate("playerJoined", "name email profilePic");
+
+  // Matches the user joined
+  const joinedMatchesPromise = Match.find({ playerJoined: userId })
+    .populate("creator", "name email profilePic")
+    .populate("playerJoined", "name email profilePic");
+
+  const [createdMatches, joinedMatches] = await Promise.all([
+    createdMatchesPromise,
+    joinedMatchesPromise,
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        createdMatches,
+        joinedMatches,
+      },
+      "User matches fetched successfully"
+    )
+  );
+});
+
+
+
+
 module.exports = {
   createMatchController,
   getSingleMatchController,
@@ -137,4 +177,5 @@ module.exports = {
   updateMatchController,
   joinMatchController,
   getAvailableMatchesController,
+  getUserMatchesController,
 };
