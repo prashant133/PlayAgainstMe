@@ -38,11 +38,6 @@ export default function Home() {
     fetchMatches();
   }, [activeTab]);
 
-  const handleCreateMatch = () => {
-    // navigate("/create-match");
-    console.log("Create Match clicked");
-  };
-
   const headingText =
     activeTab === "available" ? "Available Matches" : "All Matches";
   const subText =
@@ -78,20 +73,6 @@ export default function Home() {
             </button>
           </div>
         </div>
-
-        <div className="flex w-full justify-center md:w-auto md:justify-end">
-          {user && (
-            <button
-              onClick={handleCreateMatch}
-              className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-purple-700"
-            >
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-base">
-                +
-              </span>
-              <span>Create Match</span>
-            </button>
-          )}
-        </div>
       </div>
 
       {/* Heading */}
@@ -113,6 +94,7 @@ export default function Home() {
           {matches.map((match) => (
             <MatchCard
               key={match._id}
+              matchId={match._id}
               location={match.location}
               date={match.date}
               time={match.time}

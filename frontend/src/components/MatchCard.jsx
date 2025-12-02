@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../hooks/useAuthUser";
+import api from "../lib/apiClient";
 
 export default function MatchCard({
   location,
@@ -8,22 +9,36 @@ export default function MatchCard({
   pay,
   playerJoined,
   creatorName,
+  matchId, // match ID passed down from the parent component
 }) {
   const { user } = useAuthUser();
   const navigate = useNavigate();
 
-  const isLoggedIn = !!user;
+  const isLoggedIn = !!user; // Check if the user is logged in
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!isLoggedIn) {
+      // If the user is not logged in, redirect to the login page
       navigate("/login");
     } else {
-      console.log("Match accepted by:", user.name, "at:", location);
+      try {
+        // Send the logged-in user's playerId along with matchId
+        const playerId = user._id; // The logged-in user's ID
+
+        await api.post(`/api/v1/match/join/${matchId}`, {
+          playerId, // Send player ID to the backend
+        });
+
+        console.log("Match accepted by:", user.name, "at:", location);
+        alert("Match accepted successfully!");
+      } catch (error) {
+        console.error("Error accepting match:", error);
+        alert("Failed to accept match. Please try again.");
+      }
     }
   };
 
   const playersJoinedCount = playerJoined ? 1 : 0;
-
   const playersText =
     playersJoinedCount === 0 ? "No players joined yet" : "1 player joined";
 

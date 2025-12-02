@@ -3,15 +3,6 @@ const ApiError = require("../utils/ApiError");
 const { default: mongoose } = require("mongoose");
 
 const matchValidation = [
-  body("creator")
-    .notEmpty()
-    .withMessage("creator is required")
-    .custom((value) => {
-      if (!mongoose.Types.ObjectId.isValid(value)) {
-        throw new ApiError(400, "mongoId must be valid");
-      }
-      return true;
-    }),
   body("location").trim().notEmpty().withMessage("Location is required"),
   body("pay")
     .notEmpty()
